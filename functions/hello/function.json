@@ -1,0 +1,5 @@
+{
+	"name": "hello-apex-for-nodejs",
+	"description": "sample program for nodejs with apex",
+	"runtime": "nodejs6.10"
+}

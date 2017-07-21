@@ -1,0 +1,7 @@
+{
+  "name": "hello-apex",
+  "description": "hello-apex: sample programs",
+  "memory": 128,
+  "timeout": 5,
+  "role": "arn:aws:iam::xxxxxxxxxxxx:role/hello-apex_lambda_function"
+}

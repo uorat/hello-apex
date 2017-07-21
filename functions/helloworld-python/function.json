@@ -1,0 +1,5 @@
+{
+	"name": "hello-apex-for-python",
+	"description": "sample program for python with apex",
+	"runtime": "python2.7"
+}
