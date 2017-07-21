@@ -1,0 +1,115 @@
+Hello Apex
+============================================================
+
+Documentation
+------------------------------------------------------------
+
+[Apex – Serverless Infrastructure](http://apex.run/)
+
+
+Installation
+------------------------------------------------------------
+
+### Install Apex on your machine
+
+```
+$ curl https://raw.githubusercontent.com/apex/apex/master/install.sh | sh
+```
+
+### Auto completion (Mac OS X)
+
+```
+$ brew install bash_completion
+$ vim /usr/local/etc/bash_completion.d/apex
+$ cat /usr/local/etc/bash_completion.d/apex
+_apex()  {
+  COMPREPLY=()
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  local opts="$(apex autocomplete -- ${COMP_WORDS[@]:1})"
+  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  return 0
+}
+
+complete -F _apex apex
+
+$ exec $SHELL -l
+$ apex
+Apex version 0.15.0
+$ apex <TAB>
+--chdir      --iamrole    --region     delete       exec         init         logs         upgrade
+--dry-run    --log-level  alias        deploy       help         invoke       metrics      version
+--env        --profile    build        docs         infra        list         rollback
+```
+
+Preparation
+------------------------------------------------------------
+
+(otherwise, run `$ apex init`)
+
+1. make IAM User for executing Apex and install the credentials to `$HOME/.aws/`
+1. make IAM Role for Lambda functions `hello-apex_lambda_function`
+1. set environment variables, `$ export AWS_PROFILE="your profile name"`
+
+How to run these programs
+------------------------------------------------------------
+
+### List
+
+```
+$ apex list
+```
+
+```json
+  hello (not deployed)
+    description: sample program for nodejs with apex
+    runtime: nodejs6.10
+    memory: 128mb
+    timeout: 5s
+    role: arn:aws:iam::xxxxxxxxxxxx:role/hello-apex_lambda_function
+    handler: index.handle
+
+  helloworld-python (not deployed)
+    description: sample program for python with apex
+    runtime: python2.7
+    memory: 128mb
+    timeout: 5s
+    role: arn:aws:iam::xxxxxxxxxxxx:role/hello-apex_lambda_function
+    handler: main.handle
+```
+
+### Deploy
+
+```
+$ apex deploy
+   • creating function         env= function=hello
+   • creating function         env= function=helloworld-python
+   • created alias current     env= function=hello version=2
+   • function created          env= function=hello name=hello-apex_hello version=2
+   • created alias current     env= function=helloworld-python version=2
+   • function created          env= function=helloworld-python name=hello-apex_helloworld-python version=2
+```
+
+### Run the sample program for Node.js
+
+```
+$ apex invoke hello -L
+START RequestId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx Version: 1
+2017-07-21T11:16:29.805Z        xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx    processing event: {}
+END RequestId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+REPORT RequestId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  Duration: 0.89 ms       Billed Duration: 100 ms         Memory Size: 128 MB   Max Memory Used: 23 MB
+{"hello":"world"}
+
+```
+
+### Run the sample program for Python, with parameters
+
+```
+$ echo '{ "key1": "hoge", "key2": "hoge", "key3": "hoge" }' | apex invoke helloworld-python -L
+START RequestId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx Version: 1
+[INFO]  2017-07-21T11:19:15.758Z        xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx    value1 = hoge
+[INFO]  2017-07-21T11:19:15.758Z        xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx    value2 = hoge
+[INFO]  2017-07-21T11:19:15.758Z        xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx    value3 = hoge
+END RequestId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+REPORT RequestId: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx  Duration: 0.43 ms       Billed Duration: 100 ms         Memory Size: 128 MB   Max Memory Used: 18 MB
+{"key3": "hoge", "key2": "hoge", "key1": "hoge"}
+```
