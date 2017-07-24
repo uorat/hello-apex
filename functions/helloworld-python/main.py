@@ -1,16 +1,22 @@
 from __future__ import print_function
-
-import json
 import logging
+import json
+import requests
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
+logger.info("execute __init__")
 
 def handle(event, context):
-    #print("Received event: " + json.dumps(event, indent=2))
-    logger.info("value1 = " + event['key1'])
-    logger.info("value2 = " + event['key2'])
-    logger.info("value3 = " + event['key3'])
-    return event
-    # return event['key1']  # Echo back the first key value
-    #raise Exception('Something went wrong')
+    logger.info("Received event: " + json.dumps(event, indent=2))
+    return get_cidrs(event['region'])
+
+def get_cidrs(region):
+    url = "https://ip-ranges.amazonaws.com/ip-ranges.json"
+    logger.info("execute requests.get(), url=%s" % (url))
+    response = requests.get(url)
+    logger.debug("executed GET requests, response=%s" % (response.json()))
+    cidrs = response.json()['prefixes']
+    logger.info("execute filter(), region=%s" % (region))
+    regions = filter(lambda x: x['region'] == region , cidrs)
+    return list(map(lambda x: x['ip_prefix'], regions))
