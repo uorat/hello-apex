@@ -1,5 +1,8 @@
 {
-	"name": "hello-apex-for-python",
-	"description": "sample program for python with apex",
-	"runtime": "python2.7"
+	"name": "hello-apex-for-python"
+,	"description": "sample program for python with apex"
+,	"runtime": "python2.7"
+,	"hooks":{
+		"deploy": "pip install -r requirements.txt -t ."
+	}
 }
