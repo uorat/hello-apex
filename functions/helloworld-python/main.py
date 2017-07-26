@@ -19,4 +19,4 @@ def get_cidrs(region):
     cidrs = response.json()['prefixes']
     logger.info("execute filter(), region=%s" % (region))
     regions = filter(lambda x: x['region'] == region , cidrs)
-    return map(lambda x: x['ip_prefix'], regions)
+    return list(map(lambda x: x['ip_prefix'], regions))
