@@ -1,2 +1,3 @@
 *.swp
 *dist-info
+functions/**/site-packages

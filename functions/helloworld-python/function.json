@@ -3,6 +3,9 @@
 ,	"description": "sample program for python with apex"
 ,	"runtime": "python3.6"
 ,	"hooks":{
-		"deploy": "pip install -r requirements.txt -t ."
+		"deploy": "pip install -r requirements.txt -t ./site-packages"
+	}
+,	"environment": {
+		"PYTHONPATH": "/var/task/site-packages"
 	}
 }
